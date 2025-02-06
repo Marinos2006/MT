@@ -131,6 +131,7 @@ if "%choice%"=="4" (
 
 if "%choice%"=="0" (
     exit
+    exit
 )
 
 echo Invalid choice, please try again.
