@@ -18,47 +18,6 @@ Title KingMaref All In One Tool
 mode con: cols=100 lines=35
 color 0A
 
-:: Login Section
-:login_prompt
-cls
-echo ====================================================================================================
-echo.                                                                                
-echo    ███╗   ███╗██╗   ██╗██╗  ████████╗██╗    ████████╗ ██████╗  ██████╗ ██╗                       
-echo    ████╗ ████║██║   ██║██║  ╚══██╔══╝██║    ╚══██╔══╝██╔═══██╗██╔═══██╗██║                       
-echo    ██╔████╔██║██║   ██║██║     ██║   ██║       ██║   ██║   ██║██║   ██║██║                       
-echo    ██║╚██╔╝██║██║   ██║██║     ██║   ██║       ██║   ██║   ██║██║   ██║██║                       
-echo    ██║ ╚═╝ ██║╚██████╔╝███████╗██║   ██║       ██║   ╚██████╔╝╚██████╔╝███████╗                  
-echo    ╚═╝     ╚═╝ ╚═════╝ ╚══════╝╚═╝   ╚═╝       ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝                  
-                                                                                      
-echo    ██████╗ ██╗   ██╗    ██╗  ██╗██╗███╗   ██╗ ██████╗ ███╗   ███╗ █████╗ ██████╗ ███████╗███████╗
-echo    ██╔══██╗╚██╗ ██╔╝    ██║ ██╔╝██║████╗  ██║██╔════╝ ████╗ ████║██╔══██╗██╔══██╗██╔════╝██╔════╝
-echo    ██████╔╝ ╚████╔╝     █████╔╝ ██║██╔██╗ ██║██║  ███╗██╔████╔██║███████║██████╔╝█████╗  █████╗  
-echo    ██╔══██╗  ╚██╔╝      ██╔═██╗ ██║██║╚██╗██║██║   ██║██║╚██╔╝██║██╔══██║██╔══██╗██╔══╝  ██╔══╝  
-echo    ██████╔╝   ██║       ██║  ██╗██║██║ ╚████║╚██████╔╝██║ ╚═╝ ██║██║  ██║██║  ██║███████╗██║     
-echo    ╚═════╝    ╚═╝       ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝ 
-echo.                                                                                 
-echo ====================================================================================================
-echo.
-set /p username=Enter Username: 
-for /f "delims=" %%p in ('powershell -Command "$p = Read-Host 'Enter Password' -AsSecureString; [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($p))"') do set password=%%p
-
-
-:: Set your username and password here (case-sensitive)
-mode con: cols=100 lines=35
-if "%username%"=="Admin" (
-    if "%password%"=="Admin" (
-        goto main_menu
-    ) else (
-        echo Incorrect password! Access denied.
-        pause
-        goto login_prompt
-    )
-) else (
-    echo Incorrect username! Access denied.
-    pause
-    goto login_prompt
-)
-
 :main_menu
 cls
 echo ====================================================================================================
@@ -131,7 +90,6 @@ if "%choice%"=="4" (
 
 if "%choice%"=="0" (
     exit
-    exit
 )
 
 echo Invalid choice, please try again.
@@ -161,7 +119,7 @@ echo.
 echo 1) Word
 echo 2) Excel
 echo 3) PowerPoint
-echo 0) Back to Main Menu
+echo 4) Back to Main Menu
 echo.
 set /p appchoice=Enter your choice: 
 
@@ -180,7 +138,7 @@ if "%appchoice%"=="3" (
     goto apps_menu
 )
 
-if "%appchoice%"=="0" (
+if "%appchoice%"=="4" (
     goto main_menu
 )
 
