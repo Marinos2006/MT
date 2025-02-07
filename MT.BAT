@@ -57,7 +57,7 @@ if "%username%"=="Admin" (
     pause
     goto login_prompt
 )
-
+mode con: cols=100 lines=35
 :main_menu
 cls
 echo ====================================================================================================
