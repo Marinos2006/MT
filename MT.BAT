@@ -129,15 +129,13 @@ if %errorlevel% equ 0 (
 )
 echo.
 
-REM Remove duplicate Ultimate Performance plans
-echo Cleaning up duplicate Ultimate Performance plans...
-for /f "tokens=2 delims=:(" %%i in ('powercfg /list ^| find "Ultimate Performance"') do (
+REM Remove Balanced power plan
+echo Removing Balanced power plan...
+for /f "tokens=2 delims=:(" %%i in ('powercfg /list ^| find "Balanced"') do (
     set guid=%%i
     set guid=!guid:~1,-1!
-    if not "!guid!"=="e9a42b02-d5df-448d-aa00-03f14749eb61" (
-        echo Deleting duplicate plan with GUID: !guid!
-        powercfg /delete !guid!
-    )
+    echo Deleting Balanced plan with GUID: !guid!
+    powercfg /delete !guid!
 )
 
 REM Ensure Ultimate Performance power plan is available
@@ -147,6 +145,10 @@ powercfg /duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
 REM Set Ultimate Performance as the active power plan
 echo Setting Ultimate Performance as the active power plan...
 powercfg /setactive e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
+
+REM Re-add Balanced power plan
+echo Re-adding Balanced power plan...
+powercfg /duplicatescheme 381b4222-f694-41f0-9685-ff5bb260df2e >nul 2>&1
 
 REM Verify the active power plan
 for /f "tokens=*" %%i in ('powercfg /getactivescheme') do set activeScheme=%%i
