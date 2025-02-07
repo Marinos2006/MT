@@ -97,7 +97,7 @@ if "%choice%"=="1" (
 )
 
 if "%choice%"=="2" (
-    cls
+   cls
 echo ==============================================
 echo FPS Boost Tweaks Application
 echo ==============================================
@@ -115,7 +115,7 @@ if /i "%apply_tweaks%"=="N" (
     pause
     goto end
 )
-echo CONFIRM AGAIN!
+echo Invalid input. Please confirm again!
 goto confirm
 
 :apply_tweaks
@@ -137,10 +137,10 @@ reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\GameDVR" /v
 reg add "HKEY_CURRENT_USER\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d 0 /f
 echo - Disabled Xbox Game Bar and Game DVR.
 
-REM Set High Performance Power Plan
+REM Set Ultimate Performance Power Plan
 powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
 powercfg -setactive e9a42b02-d5df-448d-aa00-03f14749eb61
-echo - Set power plan to High Performance.
+echo - Set power plan to Ultimate Performance.
 
 REM Disable Background Apps
 reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" /v "GlobalUserDisabled" /t REG_DWORD /d 1 /f
@@ -183,15 +183,10 @@ reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerSettings
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583" /v "ValueMin" /t REG_DWORD /d 0 /f
 echo - Disabled core parking for better CPU utilization.
 
-)
-
-REM Ensure Ultimate Performance power plan is available
-echo Adding Ultimate Performance power plan if not already available...
-powercfg /duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
-
-REM Set Ultimate Performance as the active power plan
-echo Setting Ultimate Performance as the active power plan...
-powercfg /setactive e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
+REM Optimize Windows Search for Gaming
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search" /v "SetupCompletedSuccessfully" /t REG_DWORD /d 0 /f
+sc config "WSearch" start= disabled
+echo - Disabled Windows Search to reduce background usage.
 
 REM Verify the active power plan
 for /f "tokens=*" %%i in ('powercfg /getactivescheme') do set activeScheme=%%i
@@ -203,17 +198,12 @@ if "%activeScheme%"=="Power Scheme GUID: e9a42b02-d5df-448d-aa00-03f14749eb61  (
     echo Failed to set Ultimate Performance power plan.
 )
 
-REM Optimize Windows Search for Gaming
-reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search" /v "SetupCompletedSuccessfully" /t REG_DWORD /d 0 /f
-sc config "WSearch" start= disabled
-echo - Disabled Windows Search to reduce background usage.
-
 echo ==============================================
 echo FPS Tweaks Applied Successfully!
 echo ==============================================
 echo Summary of Changes:
 echo 1. Disabled Xbox Game Bar and Game DVR.
-echo 2. Set power plan to High Performance.
+echo 2. Set power plan to Ultimate Performance.
 echo 3. Disabled background apps.
 echo 4. Optimized GPU priority for gaming.
 echo 5. Disabled Nagle's Algorithm for lower network latency.
