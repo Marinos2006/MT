@@ -129,35 +129,9 @@ if %errorlevel% equ 0 (
 )
 echo.
 
-REM Check if Ultimate Performance plan is available
-echo Checking for Ultimate Performance power plan...
-powercfg /list | find "Ultimate Performance" >nul 2>&1
-if %errorlevel% equ 0 (
-    echo Ultimate Performance plan is available.
-) else (
-    echo Ultimate Performance plan is not available. Adding it now...
-    powercfg /duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
-    if %errorlevel% equ 0 (
-        echo Ultimate Performance plan added successfully.
-    ) else (
-        echo Failed to add Ultimate Performance plan.
-        echo This plan is only available on Windows 10/11 Pro for Workstations or Enterprise.
-        pause
-        goto end
-    )
-)
-
 REM Set Ultimate Performance as the active power plan
 echo Setting Ultimate Performance as the active power plan...
 powercfg /setactive e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
-if %errorlevel% equ 0 (
-    echo Ultimate Performance plan set successfully.
-) else (
-    echo Failed to set Ultimate Performance plan.
-    echo Please check if your Windows edition supports Ultimate Performance.
-    pause
-    goto end
-)
 
 REM Verify the active power plan
 for /f "tokens=*" %%i in ('powercfg /getactivescheme') do set activeScheme=%%i
@@ -167,7 +141,21 @@ if "%activeScheme%"=="Power Scheme GUID: e9a42b02-d5df-448d-aa00-03f14749eb61  (
     echo Ultimate Performance power plan is now active.
 ) else (
     echo Failed to set Ultimate Performance power plan.
-    echo Please check if your Windows edition supports Ultimate Performance.
+    echo Please ensure the Ultimate Performance plan is available on your system.
+)
+
+REM Log the results to a file
+echo Logging results to FPSBoostTweaksLog.txt...
+echo ============================================== > FPSBoostTweaksLog.txt
+echo FPS Boost Tweaks Application Log >> FPSBoostTweaksLog.txt
+echo ============================================== >> FPSBoostTweaksLog.txt
+echo. >> FPSBoostTweaksLog.txt
+echo Active Power Plan: %activeScheme% >> FPSBoostTweaksLog.txt
+if "%activeScheme%"=="Power Scheme GUID: e9a42b02-d5df-448d-aa00-03f14749eb61  (Ultimate Performance)" (
+    echo Ultimate Performance power plan is now active. >> FPSBoostTweaksLog.txt
+) else (
+    echo Failed to set Ultimate Performance power plan. >> FPSBoostTweaksLog.txt
+    echo Please ensure the Ultimate Performance plan is available on your system. >> FPSBoostTweaksLog.txt
 )
 
 REM Apply FPS Boost Tweaks
