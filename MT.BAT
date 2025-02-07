@@ -211,7 +211,40 @@ REM Optimize Windows Search for Gaming
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search" /v "SetupCompletedSuccessfully" /t REG_DWORD /d 0 /f
 sc config "WSearch" start= disabled
 echo - Disabled Windows Search to reduce background usage.
+echo ==============================================
+echo Ultimate Performance Power Plan Activator
+echo ==============================================
+echo WARNING: This script will modify system settings.
+echo ==============================================
+echo.
 
+REM Check if running as Administrator
+net session >nul 2>&1
+if %errorlevel% neq 0 (
+    echo This script must be run as Administrator.
+    pause
+    exit /b
+)
+
+REM Add Ultimate Performance power plan if not already available
+echo Adding Ultimate Performance power plan...
+powercfg /duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
+
+REM Set Ultimate Performance as the active power plan
+echo Setting Ultimate Performance as the active power plan...
+powercfg /setactive e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
+
+REM Verify the active power plan
+for /f "tokens=*" %%i in ('powercfg /getactivescheme') do set activeScheme=%%i
+echo Active Power Plan: %activeScheme%
+
+if "%activeScheme%"=="Power Scheme GUID: e9a42b02-d5df-448d-aa00-03f14749eb61  (Ultimate Performance)" (
+    echo Ultimate Performance power plan is now active.
+) else (
+    echo Failed to set Ultimate Performance power plan.
+    echo Please check if your Windows edition supports Ultimate Performance.
+    echo This plan is only available on Windows 10/11 Pro for Workstations or Enterprise.
+)
 echo ==============================================
 echo FPS Tweaks Applied Successfully!
 echo ==============================================
