@@ -100,24 +100,120 @@ if "%choice%"=="1" (
 
 if "%choice%"=="2" (
     cls
-    echo Applying FPS Boost Tweaks...
-    REM Disable Xbox Game Bar
-    reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\GameDVR" /v "AppCaptureEnabled" /t REG_DWORD /d 0 /f
-    reg add "HKEY_CURRENT_USER\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d 0 /f
+echo ==============================================
+echo FPS Boost Tweaks Application
+echo ==============================================
+echo WARNING: This script will modify system settings.
+echo A system restore point will be created automatically.
+echo ==============================================
+echo.
 
-    REM Set High Performance Power Plan
-    powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
-
-    REM Disable Background Apps
-    reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" /v "GlobalUserDisabled" /t REG_DWORD /d 1 /f
-
-    REM Optimize GPU Priority
-    reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NetworkThrottlingIndex" /t REG_DWORD /d 4294967295 /f
-    reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "GPU Priority" /t REG_DWORD /d 8 /f
-
-    echo FPS Tweaks Applied Successfully!
+REM Prompt for user confirmation
+:confirm
+set /p apply_tweaks="Do you want to apply FPS boost tweaks? (Y/N): "
+if /i "%apply_tweaks%"=="Y" goto apply_tweaks
+if /i "%apply_tweaks%"=="N" (
+    echo Tweaks were not applied. Exiting...
     pause
-    goto main_menu
+    goto end
+)
+echo CONFIRM AGAIN!
+goto confirm
+
+:apply_tweaks
+REM Create a System Restore Point
+echo Creating a system restore point...
+wmic.exe /Namespace:\\root\default Path SystemRestore Call CreateRestorePoint "FPS Boost Tweaks Restore Point", 100, 7
+if %errorlevel% equ 0 (
+    echo System restore point created successfully!
+) else (
+    echo Failed to create a system restore point. Proceed with caution.
+)
+echo.
+
+REM Apply FPS Boost Tweaks
+echo Applying FPS Boost Tweaks...
+
+REM Disable Xbox Game Bar
+reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\GameDVR" /v "AppCaptureEnabled" /t REG_DWORD /d 0 /f
+reg add "HKEY_CURRENT_USER\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d 0 /f
+echo - Disabled Xbox Game Bar and Game DVR.
+
+REM Set High Performance Power Plan
+powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
+powercfg -setactive e9a42b02-d5df-448d-aa00-03f14749eb61
+echo - Set power plan to High Performance.
+
+REM Disable Background Apps
+reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" /v "GlobalUserDisabled" /t REG_DWORD /d 1 /f
+echo - Disabled background apps.
+
+REM Optimize GPU Priority
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NetworkThrottlingIndex" /t REG_DWORD /d 4294967295 /f
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "GPU Priority" /t REG_DWORD /d 8 /f
+echo - Optimized GPU priority for gaming.
+
+REM Disable Nagle's Algorithm for Lower Latency
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" /v "TcpAckFrequency" /t REG_DWORD /d 1 /f
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces" /v "TCPNoDelay" /t REG_DWORD /d 1 /f
+echo - Disabled Nagle's Algorithm for lower network latency.
+
+REM Disable Mouse Acceleration for Better Precision
+reg add "HKEY_CURRENT_USER\Control Panel\Mouse" /v "MouseSpeed" /t REG_SZ /d "0" /f
+reg add "HKEY_CURRENT_USER\Control Panel\Mouse" /v "MouseThreshold1" /t REG_SZ /d "0" /f
+reg add "HKEY_CURRENT_USER\Control Panel\Mouse" /v "MouseThreshold2" /t REG_SZ /d "0" /f
+echo - Disabled mouse acceleration for better precision.
+
+REM Disable Windows Animations and Visual Effects
+reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v "DragFullWindows" /t REG_SZ /d "0" /f
+reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v "MenuShowDelay" /t REG_SZ /d "0" /f
+reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v "UserPreferencesMask" /t REG_BINARY /d "90320780100000" /f
+reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /v "VisualFXSetting" /t REG_DWORD /d 3 /f
+echo - Disabled Windows animations and visual effects.
+
+REM Optimize Processor Scheduling for Background Services
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32PrioritySeparation" /t REG_DWORD /d 26 /f
+echo - Optimized processor scheduling for background services.
+
+REM Disable HPET (High Precision Event Timer) for Lower Latency
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NtpClient" /v "Enabled" /t REG_DWORD /d 0 /f
+bcdedit /deletevalue useplatformclock
+echo - Disabled HPET for lower input latency.
+
+REM Disable Core Parking for Better CPU Utilization
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583" /v "ValueMax" /t REG_DWORD /d 0 /f
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583" /v "ValueMin" /t REG_DWORD /d 0 /f
+echo - Disabled core parking for better CPU utilization.
+
+REM Optimize Windows Search for Gaming
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search" /v "SetupCompletedSuccessfully" /t REG_DWORD /d 0 /f
+sc config "WSearch" start= disabled
+echo - Disabled Windows Search to reduce background usage.
+
+echo ==============================================
+echo FPS Tweaks Applied Successfully!
+echo ==============================================
+echo Summary of Changes:
+echo 1. Disabled Xbox Game Bar and Game DVR.
+echo 2. Set power plan to High Performance.
+echo 3. Disabled background apps.
+echo 4. Optimized GPU priority for gaming.
+echo 5. Disabled Nagle's Algorithm for lower network latency.
+echo 6. Disabled mouse acceleration for better precision.
+echo 7. Disabled Windows animations and visual effects.
+echo 8. Optimized processor scheduling for background services.
+echo 9. Disabled HPET for lower input latency.
+echo 10. Disabled core parking for better CPU utilization.
+echo 11. Disabled Windows Search to reduce background usage.
+echo ==============================================
+echo A system restore point was created before making changes.
+echo You can revert to this restore point if needed.
+echo ==============================================
+pause
+goto end
+
+:end
+goto main_menu
 )
 
 if "%choice%"=="3" (
