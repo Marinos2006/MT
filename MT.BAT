@@ -97,7 +97,7 @@ if "%choice%"=="1" (
 )
 
 if "%choice%"=="2" (
-   cls
+cls
 echo ==============================================
 echo FPS Boost Tweaks Application
 echo ==============================================
@@ -129,6 +129,35 @@ if %errorlevel% equ 0 (
 )
 echo.
 
+REM Remove duplicate Ultimate Performance plans
+echo Cleaning up duplicate Ultimate Performance plans...
+for /f "tokens=2 delims=:(" %%i in ('powercfg /list ^| find "Ultimate Performance"') do (
+    set guid=%%i
+    set guid=!guid:~1,-1!
+    if not "!guid!"=="e9a42b02-d5df-448d-aa00-03f14749eb61" (
+        echo Deleting duplicate plan with GUID: !guid!
+        powercfg /delete !guid!
+    )
+)
+
+REM Ensure Ultimate Performance power plan is available
+echo Adding Ultimate Performance power plan if not already available...
+powercfg /duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
+
+REM Set Ultimate Performance as the active power plan
+echo Setting Ultimate Performance as the active power plan...
+powercfg /setactive e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
+
+REM Verify the active power plan
+for /f "tokens=*" %%i in ('powercfg /getactivescheme') do set activeScheme=%%i
+echo Active Power Plan: %activeScheme%
+
+if "%activeScheme%"=="Power Scheme GUID: e9a42b02-d5df-448d-aa00-03f14749eb61  (Ultimate Performance)" (
+    echo Ultimate Performance power plan is now active.
+) else (
+    echo Failed to set Ultimate Performance power plan.
+)
+
 REM Apply FPS Boost Tweaks
 echo Applying FPS Boost Tweaks...
 
@@ -136,11 +165,6 @@ REM Disable Xbox Game Bar
 reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\GameDVR" /v "AppCaptureEnabled" /t REG_DWORD /d 0 /f
 reg add "HKEY_CURRENT_USER\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d 0 /f
 echo - Disabled Xbox Game Bar and Game DVR.
-
-REM Set Ultimate Performance Power Plan
-powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
-powercfg -setactive e9a42b02-d5df-448d-aa00-03f14749eb61
-echo - Set power plan to Ultimate Performance.
 
 REM Disable Background Apps
 reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" /v "GlobalUserDisabled" /t REG_DWORD /d 1 /f
@@ -187,16 +211,6 @@ REM Optimize Windows Search for Gaming
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search" /v "SetupCompletedSuccessfully" /t REG_DWORD /d 0 /f
 sc config "WSearch" start= disabled
 echo - Disabled Windows Search to reduce background usage.
-
-REM Verify the active power plan
-for /f "tokens=*" %%i in ('powercfg /getactivescheme') do set activeScheme=%%i
-echo Active Power Plan: %activeScheme%
-
-if "%activeScheme%"=="Power Scheme GUID: e9a42b02-d5df-448d-aa00-03f14749eb61  (Ultimate Performance)" (
-    echo Ultimate Performance power plan is now active.
-) else (
-    echo Failed to set Ultimate Performance power plan.
-)
 
 echo ==============================================
 echo FPS Tweaks Applied Successfully!
