@@ -43,9 +43,8 @@ set /p username=Enter Username:
 for /f "delims=" %%p in ('powershell -Command "$p = Read-Host 'Enter Password' -AsSecureString; [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($p))"') do set password=%%p
 
 :: Set your username and password here (case-sensitive)
-mode con: cols=100 lines=35
-if "%username%"=="Admin" (
-    if "%password%"=="Admin" (
+if /i "%username%"=="Admin" (
+    if /i "%password%"=="Admin" (
         goto main_menu
     ) else (
         echo Incorrect password! Access denied.
@@ -57,7 +56,7 @@ if "%username%"=="Admin" (
     pause
     goto login_prompt
 )
-mode con: cols=100 lines=35
+
 :main_menu
 cls
 echo ====================================================================================================
@@ -86,14 +85,15 @@ echo 0. EXIT
 echo.
 set /p choice=Enter your choice: 
 
-if "%choice%"=="1" (
+if /i "%choice%"=="1" (
     cls
     echo Running Windows Activation Command...
     powershell -Command "irm https://get.activated.win | iex"
     pause
     goto main_menu
 )
-if "%choice%"=="2" (
+
+if /i "%choice%"=="2" (
     cls
     echo You are about to apply FPS Boost Tweaks.
     echo WARNING: These tweaks will modify your system settings.
@@ -162,11 +162,11 @@ if "%choice%"=="2" (
     goto main_menu
 )
 
-if "%choice%"=="3" (
+if /i "%choice%"=="3" (
     goto apps_menu
 )
 
-if "%choice%"=="4" (
+if /i "%choice%"=="4" (
     cls
     powershell -Command "iwr -useb https://christitus.com/win | iex"
     echo Running Chris Titus Tool...
@@ -174,7 +174,7 @@ if "%choice%"=="4" (
     goto main_menu
 )
 
-if "%choice%"=="0" (
+if /i "%choice%"=="0" (
     exit
 )
 
