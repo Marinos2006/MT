@@ -156,6 +156,8 @@ if "%activeScheme%"=="Power Scheme GUID: e9a42b02-d5df-448d-aa00-03f14749eb61  (
     echo Ultimate Performance power plan is now active.
 ) else (
     echo Failed to set Ultimate Performance power plan.
+    echo Please check if your Windows edition supports Ultimate Performance.
+    echo This plan is only available on Windows 10/11 Pro for Workstations or Enterprise.
 )
 
 REM Apply FPS Boost Tweaks
