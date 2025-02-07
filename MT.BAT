@@ -183,9 +183,25 @@ reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerSettings
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\54533251-82be-4824-96c1-47b60b740d00\0cc5b647-c1df-4637-891a-dec35c318583" /v "ValueMin" /t REG_DWORD /d 0 /f
 echo - Disabled core parking for better CPU utilization.
 
-REM Apply Ultimate Performance Power Plan
-powercfg /setactive e9a42b02-d5df-448d-aa00-03f14749eb61
-echo - Ultimate Performance power plan applied.
+)
+
+REM Ensure Ultimate Performance power plan is available
+echo Adding Ultimate Performance power plan if not already available...
+powercfg /duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
+
+REM Set Ultimate Performance as the active power plan
+echo Setting Ultimate Performance as the active power plan...
+powercfg /setactive e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
+
+REM Verify the active power plan
+for /f "tokens=*" %%i in ('powercfg /getactivescheme') do set activeScheme=%%i
+echo Active Power Plan: %activeScheme%
+
+if "%activeScheme%"=="Power Scheme GUID: e9a42b02-d5df-448d-aa00-03f14749eb61  (Ultimate Performance)" (
+    echo Ultimate Performance power plan is now active.
+) else (
+    echo Failed to set Ultimate Performance power plan.
+)
 
 REM Optimize Windows Search for Gaming
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search" /v "SetupCompletedSuccessfully" /t REG_DWORD /d 0 /f
