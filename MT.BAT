@@ -302,9 +302,6 @@ echo    ╚═════╝    ╚═╝       ╚═╝  ╚═╝╚═╝�
 echo.                                                                                  
 echo ====================================================================================================
 echo.
-echo 1. Install Applications
-echo 2. Uninstall Applications
-echo 3. Exit to Main Menu
 echo 1) Word
 echo 2) Excel
 echo 3) PowerPoint
@@ -313,21 +310,10 @@ echo.
 set /p apps_choice=Enter your choice: 
 set /p appchoice=Enter your choice: 
 
-if "%apps_choice%"=="1" (
-    cls
-    echo Installing applications...
-    REM Add commands to install your apps here
-    pause
 if "%appchoice%"=="1" (
     start winword.exe
     goto apps_menu
 )
-
-if "%apps_choice%"=="2" (
-    cls
-    echo Uninstalling applications...
-    REM Add commands to uninstall your apps here
-    pause
 if "%appchoice%"=="2" (
     start excel.exe
     goto apps_menu
@@ -336,8 +322,6 @@ if "%appchoice%"=="3" (
     start powerpnt.exe
     goto apps_menu
 )
-
-if "%apps_choice%"=="3" (
 if "%appchoice%"=="0" (
     goto main_menu
 )
