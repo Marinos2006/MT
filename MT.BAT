@@ -129,7 +129,7 @@ if %errorlevel% equ 0 (
 )
 echo.
 
-REM Ensure Ultimate Performance power plan is available
+REM Ensure Ultimate Performance power plan is available and active
 echo Checking for Ultimate Performance power plan...
 powercfg /list | find "Ultimate Performance" >nul 2>&1
 if %errorlevel% equ 0 (
