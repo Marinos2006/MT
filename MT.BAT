@@ -170,20 +170,6 @@ if "%activeScheme%"=="Power Scheme GUID: e9a42b02-d5df-448d-aa00-03f14749eb61  (
     echo Please ensure the Ultimate Performance plan is available on your system.
 )
 
-REM Log the results to a file
-echo Logging results to FPSBoostTweaksLog.txt...
-echo ============================================== > FPSBoostTweaksLog.txt
-echo FPS Boost Tweaks Application Log >> FPSBoostTweaksLog.txt
-echo ============================================== >> FPSBoostTweaksLog.txt
-echo. >> FPSBoostTweaksLog.txt
-echo Active Power Plan: %activeScheme% >> FPSBoostTweaksLog.txt
-if "%activeScheme%"=="Power Scheme GUID: e9a42b02-d5df-448d-aa00-03f14749eb61  (Ultimate Performance)" (
-    echo Ultimate Performance power plan is now active. >> FPSBoostTweaksLog.txt
-) else (
-    echo Failed to set Ultimate Performance power plan. >> FPSBoostTweaksLog.txt
-    echo Please ensure the Ultimate Performance plan is available on your system. >> FPSBoostTweaksLog.txt
-)
-
 REM Apply FPS Boost Tweaks
 echo Applying FPS Boost Tweaks...
 
@@ -238,8 +224,10 @@ reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search" /v "SetupComplete
 sc config "WSearch" start= disabled
 echo - Disabled Windows Search to reduce background usage.
 
+REM Display Summary of Applied Tweaks
+echo.
 echo ==============================================
-echo FPS Tweaks Applied Successfully!
+echo FPS Boost Tweaks Applied Successfully!
 echo ==============================================
 echo Summary of Changes:
 echo 1. Disabled Xbox Game Bar and Game DVR.
@@ -257,6 +245,7 @@ echo ==============================================
 echo A system restore point was created before making changes.
 echo You can revert to this restore point if needed.
 echo ==============================================
+echo.
 pause
 goto end
 
